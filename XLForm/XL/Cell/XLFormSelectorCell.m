@@ -164,8 +164,15 @@
 			}
         }
         else{
-            Class selectorClass = self.rowDescriptor.selectorControllerClass;
-            UIViewController<XLFormRowDescriptorViewController> *selectorViewController = [[selectorClass alloc] init];
+            UIViewController<XLFormRowDescriptorViewController> *selectorViewController = nil;
+            if (controller.storyboard != nil && [self.rowDescriptor.selectorControllerClass isKindOfClass:[NSString class]]) {
+                NSString *selectorClass = self.rowDescriptor.selectorControllerClass;
+                selectorViewController = [controller.storyboard instantiateViewControllerWithIdentifier:selectorClass];
+            }
+            else{
+                Class selectorClass = self.rowDescriptor.selectorControllerClass;
+                selectorViewController = [[selectorClass alloc] init];
+            }
             selectorViewController.rowDescriptor = self.rowDescriptor;
             selectorViewController.title = self.rowDescriptor.selectorTitle;
             

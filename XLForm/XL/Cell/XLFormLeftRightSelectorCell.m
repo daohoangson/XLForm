@@ -161,8 +161,15 @@
         }
         else{
             XLFormLeftRightSelectorOption * option = [self leftOptionForOption:self.rowDescriptor.leftRightSelectorLeftOptionSelected];
-            Class selectorClass =  option.rightSelectorControllerClass;
-            UIViewController<XLFormRowDescriptorViewController> *selectorViewController = [[selectorClass alloc] init];
+            UIViewController<XLFormRowDescriptorViewController> *selectorViewController = nil;
+            if (controller.storyboard != nil && [option.rightSelectorControllerClass isKindOfClass:[NSString class]]) {
+                NSString *selectorClass = option.rightSelectorControllerClass;
+                selectorViewController = [controller.storyboard instantiateViewControllerWithIdentifier:selectorClass];
+            }
+            else{
+                Class selectorClass = option.rightSelectorControllerClass;
+                selectorViewController = [[selectorClass alloc] init];
+            }
             selectorViewController.rowDescriptor = self.rowDescriptor;
             selectorViewController.title = self.rowDescriptor.selectorTitle;
             [controller.navigationController pushViewController:selectorViewController animated:YES];
